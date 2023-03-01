@@ -1,0 +1,62 @@
+filter_method: ESKF
+
+#imu binary file format:sequential 7 double including time, angle_velocity (rad/s), linear_accel(m/s^2).
+#gps binary file format:sequential 4 double including time, gps latidtude, longtitude, altitude.
+input_file:
+  imu: "imu.bin"
+  gps: "gps.bin"
+
+#binary format:  sequential 8 doubles including time, position and quaternian
+output_file: "fused.bin"
+
+#imu sampling frequency
+imu_freq: 100
+
+earth:
+  rotation_speed: 7.272205216e-05
+  gravity: 9.79484197226504
+  latitude: 32
+  longtitude: 120
+
+#reference point, the local enu frame at this point is chosen as the global frame
+ref_lla:
+  lat: 32
+  lon: 120
+  alti: 0
+
+#integration time segment, end_time=-1 means the end time is unlimited
+start_time: 0
+end_time: -1
+
+#gps antenna coordinates in imu body frame
+L_gps:
+  x: 0
+  y: 0
+  z: 0
+
+#initial velocity (enu frame, m/s) and orientation (zyx convention in frame enu, degree)
+initial_state:
+  velocity: 
+      x: 0
+      y: 0
+      z: 0
+  orientation:
+      z: 0
+      y: 0
+      x: 0 
+
+covariance:
+  prior:
+    posi: 1.0
+    vel: 10
+    ori: 1.0e-1
+    epsilon: 1.0e-6
+    delta: 1.0e-6
+    gravity: 0.01
+  process:
+    vel: 1e-3
+    ori: 1e-3
+    gyro: 1.0e-5
+    accel: 1.0e-4
+  measurement:
+    posi: 10

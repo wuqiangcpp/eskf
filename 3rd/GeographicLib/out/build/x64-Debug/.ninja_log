@@ -1,0 +1,6 @@
+# ninja log v5
+7	619	6902829688392323	CMakeFiles/libGeographiccc.dir/src/Geocentric.cpp.obj	8f8444fbd16c229
+12	322	6902829685417468	CMakeFiles/libGeographiccc.dir/src/Math.cpp.obj	462123f90daa7b50
+1	844	6902829690631685	CMakeFiles/libGeographiccc.dir/src/LocalCartesian.cpp.obj	66bc10f36cadb90d
+844	1172	6902829693417558	libGeographiccc.lib	7692fc3aeced6178
+1	14	0	clean	9992afb1f91dc381
