@@ -1,7 +1,7 @@
 //
 // Created by meng on 2021/2/19.
 //
-#include "tool.h"
+
 #include "imu_flow.h"
 #include <fstream>
 #include <iostream>
@@ -30,6 +30,7 @@ void IMUFlow::ReadIMUData(const std::string &file, std::deque<IMUData> &imu_data
         imu_data.time = buffer[i];
         if (imu_data.time < start_time) continue;
         if (end_time > 0 && (imu_data.time > end_time)) break;
+        Eigen::Matrix3d M;
         imu_data.angle_velocity = Eigen::Vector3d(&buffer[i+1]);//rad / s
         imu_data.linear_accel = Eigen::Vector3d(&buffer[i+4]);//m / s ^ 2
         imu_data_buff.push_back(imu_data);

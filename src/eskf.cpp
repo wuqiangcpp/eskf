@@ -38,7 +38,7 @@ ESKF::ESKF(const YAML::Node& node) {
     g_ = Eigen::Vector3d(0.0, 0.0, -gravity);
     w_ = Eigen::Vector3d(0.0, earth_rotation_speed * cos(L_ * kDegree2Radian),
         earth_rotation_speed * sin(L_ * kDegree2Radian));
-    w_.setZero();
+    //w_.setZero();
 
     SetCovarianceP(cov_prior_posi, cov_prior_vel, cov_prior_ori,
         cov_prior_epsilon, cov_prior_delta,cov_prior_gravity);
@@ -70,7 +70,7 @@ void ESKF::SetCovarianceQ(double vel_noise,double ori_noise,double gyro_noise, d
 
 void ESKF::SetCovarianceR(double posi_noise) {
     R_.setZero();
-    R_ = Eigen::Matrix3d::Identity() * posi_noise * posi_noise;
+    R_ = Eigen::Matrix3d::Identity() * posi_noise ;
 }
 
 void ESKF::SetCovarianceP(double posi_noise, double velo_noise, double ori_noise,
@@ -96,7 +96,7 @@ void ESKF::Init(const GPSData& curr_gps_data, const IMUData& curr_imu_data) {
 
     q_ = init_q_;
 
-    init_pos_ = curr_gps_data.position_enu;
+    //init_pos_ = curr_gps_data.position_enu;
     pos_ = init_pos_;
 
     imu_data_buff_.clear();

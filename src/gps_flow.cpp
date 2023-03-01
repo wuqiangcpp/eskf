@@ -1,7 +1,6 @@
 //
 // Created by meng on 2021/2/19.
 //
-#include "tool.h"
 #include "gps_flow.h"
 
 #include <iostream>
@@ -24,7 +23,7 @@ void GPSFlow::LLA2ENU(GPSData &gps_data) {
                            gps_data.position_enu.z());
 }
 
-//binary file format:sequential 4 double including time, gps latidtude, longtitude, altitude.
+//binary file format:sequential 4 double including time, gps latidtude (degree), longtitude (degree), altitude.
 void GPSFlow::ReadGPSData(const std::string &file, std::deque<GPSData>& gps_data_vec,double start_time,double end_time) {
     std::ifstream fin(file.c_str(), std::ios::binary);
     if (!fin) {

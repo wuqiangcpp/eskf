@@ -18,7 +18,7 @@ earth:
   latitude: 32
   longtitude: 120
 
-#reference point, the local enu frame at this point is chosen as the global frame
+#reference point, the local enu frame axis at this point is chosen as the global frame axis
 ref_lla:
   lat: 32
   lon: 120
@@ -35,9 +35,10 @@ L_gps:
   z: 0
 
 #initial velocity (enu frame, m/s) and orientation (zyx convention in frame enu, degree)
+#initial position is taken as origin, i.e., the enu frame at reference point is parallelly shifted to the starting point
 initial_state:
   velocity: 
-      x: 0
+      x: 10
       y: 0
       z: 0
   orientation:
@@ -47,16 +48,16 @@ initial_state:
 
 covariance:
   prior:
-    posi: 1.0
-    vel: 10
-    ori: 1.0e-1
+    posi: 1.0e-4
+    vel: 1.0e-4
+    ori: 1.0e-2
     epsilon: 1.0e-6
     delta: 1.0e-6
-    gravity: 0.01
+    gravity: 0.0
   process:
-    vel: 1e-3
-    ori: 1e-3
-    gyro: 1.0e-5
-    accel: 1.0e-4
+    vel: 0
+    ori: 0
+    gyro: 1.0e-7
+    accel: 1.0e-6
   measurement:
-    posi: 10
+    posi: 100

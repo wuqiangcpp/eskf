@@ -2,7 +2,7 @@
 // Created by meng on 2021/2/24.
 //
 #include "eskf_flow.h"
-#include "tool.h"
+
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
@@ -86,7 +86,7 @@ void ESKFFlow::Run() {
         if (curr_imu_data_.time < curr_gps_data_.time){
             eskf_ptr_->Predict(curr_imu_data_);
             imu_data_buff_.pop_front();
-        } else{
+        } else if(std::abs(curr_imu_data_.time - curr_gps_data_.time)< 1. / imu_freq_){
             eskf_ptr_->Predict(curr_imu_data_);
             imu_data_buff_.pop_front();
 
