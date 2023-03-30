@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(gps_imu_fusion)
 
-#set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Release)
 #set(CMAKE_CXX_STANDARD 11)
 
 
@@ -49,10 +49,8 @@ add_custom_command(TARGET ${PROJECT_NAME}
    COMMAND ${CMAKE_COMMAND} -E 
        copy_if_different  
         "${CMAKE_BINARY_DIR}/$<$<CONFIG:Release>:${target}.exe>"  
-        "${CMAKE_BINARY_DIR}/$<$<CONFIG:Debug>:${target}.exe>"  
+        "${CMAKE_BINARY_DIR}/$<$<CONFIG:Debug>:${target}_debug.exe>"  
         "${PROJECT_SOURCE_DIR}/" 
 )
-
-
 
 

@@ -1,7 +1,7 @@
 filter_method: ESKF
 
 #imu binary file format:sequential 7 double including time, angle_velocity (rad/s), linear_accel(m/s^2).
-#gps binary file format:sequential 4 double including time, gps latidtude, longtitude, altitude.
+#gps binary file format:sequential 4 double including time, gps latidtude (degree), longtitude (degree), altitude (degree).
 input_file:
   imu: "imu.bin"
   gps: "gps.bin"
@@ -12,8 +12,14 @@ output_file: "fused.bin"
 #imu sampling frequency
 imu_freq: 100
 
+#earth:
+#  rotation_speed: 7.272205216e-05
+#  gravity: 9.79484197226504
+#  latitude: 32
+#  longtitude: 120
+
 earth:
-  rotation_speed: 7.272205216e-05
+  rotation_speed: 0
   gravity: 9.79484197226504
   latitude: 32
   longtitude: 120
@@ -45,7 +51,14 @@ initial_state:
       z: 0
       y: 0
       x: 0 
-
+# prior
+#   posi, vel, ori: position, velocity, oritation uncertainty;
+#   epsilon: gyro_noise,  delta: accel_noise
+# process
+#   vel: velocity noise  
+#   ori: oritation noise
+#   gyro: gyro bias noise
+#   accel: accel bias noise
 covariance:
   prior:
     posi: 1.0e-4
@@ -55,9 +68,9 @@ covariance:
     delta: 1.0e-6
     gravity: 0.0
   process:
-    vel: 0
-    ori: 0
-    gyro: 1.0e-7
-    accel: 1.0e-6
+    vel: 1.0e-10
+    ori: 1.0e-8
+    gyro_bias: 0
+    accel_bias: 0
   measurement:
     posi: 100
