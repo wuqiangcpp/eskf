@@ -7,6 +7,7 @@
 
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Dense>
+#include<iostream>
 
 
 
@@ -17,5 +18,9 @@ public:
     double time = 0.0;
     Eigen::Vector3d linear_accel = Eigen::Vector3d::Zero();
     Eigen::Vector3d angle_velocity = Eigen::Vector3d::Zero();//unit: rad/s
+
+    void print() {
+        std::cout << time << "\t" << linear_accel.transpose() << "\t" << angle_velocity.transpose() << std::endl;
+    }
 };
 #endif //GPS_IMU_FUSION_IMU_DATA_H

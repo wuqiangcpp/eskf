@@ -14,18 +14,26 @@ ESKFFlow::ESKFFlow(const std::string &work_space_path)
     std::string config_file_path = work_space_path_ + "/config.yaml";
     YAML::Node config_node = YAML::LoadFile(config_file_path);
     eskf_ptr_ = std::make_shared<ESKF>(config_node);
-    Eigen::Vector3d lla0;
-    lla0[0] = config_node["ref_lla"]["lat"].as<double>();
-    lla0[1] = config_node["ref_lla"]["lon"].as<double>();
-    lla0[2] = config_node["ref_lla"]["alti"].as<double>();
+    gps_flow_ptr_ = std::make_shared<GPSFlow>();
+    imu_flow_ptr_ = std::make_shared<IMUFlow>();
     imu_freq_= config_node["imu_freq"].as<double>();
     imu_file_= config_node["input_file"]["imu"].as<std::string>();
     gps_file_ = config_node["input_file"]["gps"].as<std::string>();
     output_file_ = config_node["output_file"].as<std::string>();
-    gps_flow_ptr_->setRef(lla0);
+
+    bool ref_lla_input= config_node["ref_lla_input"].as<bool>();
+    if (ref_lla_input) {
+        Eigen::Vector3d lla0;
+        lla0[0] = config_node["ref_lla"]["lat"].as<double>();
+        lla0[1] = config_node["ref_lla"]["lon"].as<double>();
+        lla0[2] = config_node["ref_lla"]["alti"].as<double>();
+        gps_flow_ptr_->setRef(lla0);
+    }
 
     start_time_= config_node["start_time"].as<double>();
     end_time_=config_node["end_time"].as<double>();
+
+    verbose_= config_node["verbose"].as<int>();
 }
 
 void ESKFFlow::ReadData() {
@@ -41,7 +49,7 @@ bool ESKFFlow::ValidGPSAndIMUData() {
 
     double delta_time = curr_imu_data_.time - curr_gps_data_.time;
 
-    double delta_imu_t = 1. / imu_freq_;
+    double delta_imu_t = 1. / imu_freq_*0.5;
 
     if (curr_gps_data_.time < start_time_) {
         gps_data_buff_.pop_front();
@@ -67,6 +75,8 @@ bool ESKFFlow::ValidGPSAndIMUData() {
 
 void ESKFFlow::Run() {
     ReadData();
+    std::cout << "(latitude,longitude,altitude) of reference point:\n";
+    std::cout << gps_flow_ptr_->getRef().transpose() << std::endl;
 
     while (!imu_data_buff_.empty() && !gps_data_buff_.empty()){
         if (!ValidGPSAndIMUData()){
@@ -83,10 +93,16 @@ void ESKFFlow::Run() {
     while (!imu_data_buff_.empty() && !gps_data_buff_.empty()){
         curr_imu_data_ = imu_data_buff_.front();
         curr_gps_data_ = gps_data_buff_.front();
-        if (curr_imu_data_.time < curr_gps_data_.time){
+
+        //std::cout << curr_imu_data_.time << "  " << curr_gps_data_.time << std::endl;
+        if (curr_gps_data_.time- curr_imu_data_.time>= 1. / imu_freq_ * 0.5){
             eskf_ptr_->Predict(curr_imu_data_);
             imu_data_buff_.pop_front();
-        } else if(std::abs(curr_imu_data_.time - curr_gps_data_.time)< 1. / imu_freq_){
+            if (verbose_) {
+                curr_imu_data_.print();
+            }
+        }
+        else if(std::abs(curr_imu_data_.time - curr_gps_data_.time)< 1. / imu_freq_*0.5){
             eskf_ptr_->Predict(curr_imu_data_);
             imu_data_buff_.pop_front();
 
@@ -94,6 +110,13 @@ void ESKFFlow::Run() {
 
             SavePose(fused_file, curr_gps_data_.time,eskf_ptr_->GetPose());
 
+            gps_data_buff_.pop_front();
+            if (verbose_) {
+                curr_imu_data_.print();
+                curr_gps_data_.print();
+            }
+        }
+        else if (curr_imu_data_.time-curr_gps_data_.time >= 1. / imu_freq_ * 0.5) {
             gps_data_buff_.pop_front();
         }
 

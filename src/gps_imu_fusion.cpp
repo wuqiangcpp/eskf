@@ -15,5 +15,6 @@ int main(int argc, char** argv){
 
     eskf_flow.Run();
 
+    getchar();
     return 0;
 }

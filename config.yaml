@@ -1,7 +1,7 @@
 filter_method: ESKF
 
 #imu binary file format:sequential 7 double including time, angle_velocity (rad/s), linear_accel(m/s^2).
-#gps binary file format:sequential 4 double including time, gps latidtude (degree), longtitude (degree), altitude (degree).
+#gps binary file format:sequential 4 double including time, gps latidtude (degree), longtitude (degree), altitude (m).
 input_file:
   imu: "imu.bin"
   gps: "gps.bin"
@@ -11,6 +11,8 @@ output_file: "fused.bin"
 
 #imu sampling frequency
 imu_freq: 100
+
+verbose: 0
 
 #earth:
 #  rotation_speed: 7.272205216e-05
@@ -24,7 +26,10 @@ earth:
   latitude: 32
   longtitude: 120
 
-#reference point, the local enu frame axis at this point is chosen as the global frame axis
+#if ref_lla_input is false, the start gps sample is taken as reference, otherwise ref_lla  is taken.
+#ref_lla: reference point latitude,longitude,altitude, the local enu frame axis at this point 
+#           is chosen as the global frame axis if ref_lla_input is true
+ref_lla_input: true
 ref_lla:
   lat: 32
   lon: 120

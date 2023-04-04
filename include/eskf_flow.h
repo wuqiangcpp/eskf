@@ -60,6 +60,8 @@ private:
     std::string imu_file_;
     std::string gps_file_;
     std::string output_file_;
+
+    int verbose_;
 };
 
 #endif //GPS_IMU_FUSION_ESKF_FLOW_H

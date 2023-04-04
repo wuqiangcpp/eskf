@@ -19,7 +19,7 @@ class IMUFlow{
 public:
     IMUFlow() = default;
 
-    static void ReadIMUData(const std::string& file,
+    void ReadIMUData(const std::string& file,
                             std::deque<IMUData>& imu_data_buff,
                             double start_time, double end_time
                            );

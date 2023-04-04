@@ -49,7 +49,7 @@ add_custom_command(TARGET ${PROJECT_NAME}
    COMMAND ${CMAKE_COMMAND} -E 
        copy_if_different  
         "${CMAKE_BINARY_DIR}/$<$<CONFIG:Release>:${target}.exe>"  
-        "${CMAKE_BINARY_DIR}/$<$<CONFIG:Debug>:${target}_debug.exe>"  
+#        "${CMAKE_BINARY_DIR}/$<$<CONFIG:Debug>:${target}_debug.exe>"  
         "${PROJECT_SOURCE_DIR}/" 
 )
 

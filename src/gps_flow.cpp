@@ -6,11 +6,15 @@
 #include <iostream>
 #include <fstream>
 
-GeographicLib::LocalCartesian GPSFlow::geo_converter_{32.0, 120.0, 0.0};
-
 
 void GPSFlow::setRef(const Eigen::Vector3d& lla0) {
-    geo_converter_ = GeographicLib::LocalCartesian{ lla0.x(),lla0.y(),lla0.z() };
+    geo_converter_.Reset(lla0.x(), lla0.y(), lla0.z());
+    lla_ref_ = lla0;
+    ref_set_ = true;
+}
+
+Eigen::Vector3d  GPSFlow::getRef() {
+    return lla_ref_;
 }
 
 void GPSFlow::LLA2ENU(GPSData &gps_data) {
@@ -45,6 +49,9 @@ void GPSFlow::ReadGPSData(const std::string &file, std::deque<GPSData>& gps_data
         if (gps_data.time < start_time) continue;
         if (end_time > 0  && (gps_data.time > end_time) ) break;
         gps_data.position_lla = Eigen::Vector3d(&(buffer[i+1])) ;//degree
+        if (!ref_set_) {
+            setRef(gps_data.position_lla);
+        }
         LLA2ENU(gps_data);
         //std::cout << gps_data.position_enu.transpose() << std::endl;
         gps_data_vec.push_back(gps_data);

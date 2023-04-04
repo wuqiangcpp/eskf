@@ -7,6 +7,7 @@
 
 #include "LocalCartesian.hpp"
 #include <eigen3/Eigen/Core>
+#include<iostream>
 
 class GPSData{
 public:
@@ -17,6 +18,10 @@ public:
     Eigen::Vector3d position_enu = Eigen::Vector3d::Zero();
 
     double time = 0.0;
+
+    void print() {
+        std::cout << time << "\t" << position_lla.x() << "\t" << position_lla.y() << "\t" << position_lla.z() << std::endl;
+    }
 };
 
 #endif //GPS_IMU_FUSION_GPS_DATA_H
